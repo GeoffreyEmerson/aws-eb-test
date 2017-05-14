@@ -1,39 +1,22 @@
-const fs = require('fs')
+// load libraries
+const express = require('express')
 const path = require('path')
 
-const indexPath = path.resolve(__dirname, '../public/index.html')
-const html = fs.readFileSync(indexPath)
+// load modules
+const errorhandler = require('./errorhandler')
 
-const log = function (entry) {
-  fs.appendFileSync('/tmp/sample-app.log', new Date().toISOString() + ' - ' + entry + '\n')
-}
+// set common paths
+const publicPath = path.resolve(__dirname, '../public')
+const indexHtml = path.resolve(__dirname, '../index.html')
 
-function app (req, res) {
-  if (req.method === 'POST') {
-    let body = ''
-
-    req.on('data', function (chunk) {
-      body += chunk
-    })
-
-    req.on('end', function () {
-      if (req.url === '/') {
-        log('Received message: ' + body)
-      } else {
-        req.url = '/scheduled'
-        if (req.url) {
-          log('Received task ' + req.headers['x-aws-sqsd-taskname'] + ' scheduled at ' + req.headers['x-aws-sqsd-scheduled-at'])
-        }
-      }
-
-      res.writeHead(200, 'OK', {'Content-Type': 'text/plain'})
-      res.end()
-    })
-  } else {
-    res.writeHead(200)
-    res.write(html)
-    res.end()
-  }
-};
+// define express routes
+const app = express()
 
 module.exports = app
+  .use(express.static(publicPath))
+  .get('/', (req, res) => res.sendFile(indexHtml))
+  .use(errorhandler)
+
+// const log = function (entry) {
+//   fs.appendFileSync('/tmp/sample-app.log', new Date().toISOString() + ' - ' + entry + '\n')
+// }
