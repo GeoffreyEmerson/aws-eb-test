@@ -1,5 +1,5 @@
 version: 1
 cron: 
-  - name: "task1"
-    url: "/scheduled"
-    schedule: "* * * * *"
+  - name: "healthcheck"
+    url: "/api/healthcheck"
+    schedule: "*/5 * * * *"
