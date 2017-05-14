@@ -7,5 +7,6 @@ module.exports = router
 .get('/', function (req, res) {
   res.send('sweet!')
 })
-.get('/setup', db.setupDB)
+.get('/createTable', db.createTable)
+.get('/addItem', db.addItem)
 .get('/getAllItems', db.getAllItems)

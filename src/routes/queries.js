@@ -15,16 +15,34 @@ var db = pgp(connectionString)
 
 // add query functions
 
-const setupSQL = require('./items.sql')
-
-function setupDB (req, res, next) {
-  db.any(`${setupSQL}`)
+function createTable (req, res, next) {
+  db.any(`CREATE TABLE items (
+      ID SERIAL PRIMARY KEY,
+      name VARCHAR,
+      media VARCHAR,
+      release_date VARCHAR
+    );`)
     .then(function (data) {
       res.status(200)
         .json({
           status: 'success',
           data: data,
-          message: 'set up database'
+          message: 'set up table'
+        })
+    })
+    .catch(function (err) {
+      return next(err)
+    })
+}
+
+function addItem (req, res, next) {
+  db.any(`INSERT INTO items (name, media, release_date) VALUES ('Star Wars', 'LaserDisk', '1977');`)
+    .then(function (data) {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'added sample item'
         })
     })
     .catch(function (err) {
@@ -48,7 +66,8 @@ function getAllItems (req, res, next) {
 }
 
 module.exports = {
-  setupDB,
+  createTable,
+  addItem,
   getAllItems
 }
 
