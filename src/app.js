@@ -4,6 +4,7 @@ const path = require('path')
 
 // load modules
 const errorhandler = require('./errorhandler')
+const items = require('./routes/items')
 
 // set common paths
 const publicPath = path.resolve(__dirname, '../public')
@@ -15,6 +16,7 @@ const app = express()
 module.exports = app
   .use(express.static(publicPath))
   .get('/', (req, res) => res.sendFile(indexHtml))
+  .use('/api/items', items)
   .use(errorhandler)
 
 // const log = function (entry) {
