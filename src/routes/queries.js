@@ -16,58 +16,44 @@ var db = pgp(connectionString)
 // add query functions
 
 function createTable (req, res, next) {
-  db.any(`CREATE TABLE items (
-      ID SERIAL PRIMARY KEY,
-      name VARCHAR,
-      media VARCHAR,
-      release_date VARCHAR
-    );`)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'set up table'
-        })
-    })
-    .catch(function (err) {
-      return next(err)
-    })
-}
-
-function addItem (req, res, next) {
-  db.any(`INSERT INTO items (name, media, release_date) VALUES ('Star Wars', 'LaserDisk', '1977');`)
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'added sample item'
-        })
-    })
-    .catch(function (err) {
-      return next(err)
-    })
+  db.tx(t => {
+    var queries = [
+      t.none('DROP TABLE items;'),
+      t.none('CREATE TABLE items (ID SERIAL PRIMARY KEY, name VARCHAR, media VARCHAR, release_date VARCHAR);'),
+      t.none('INSERT INTO items (name, media, release_date) VALUES($1, $2, $3)', 'Star Wars', 'LaserDisk', '1977')
+    ]
+    return t.batch(queries)
+  })
+  .then(function (data) {
+    res.status(200)
+      .json({
+        status: 'success',
+        data: data,
+        message: 'set up table'
+      })
+  })
+  .catch(function (err) {
+    return next(err)
+  })
 }
 
 function getAllItems (req, res, next) {
   db.any('select * from items')
-    .then(function (data) {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved ALL items'
-        })
-    })
-    .catch(function (err) {
-      return next(err)
-    })
+  .then(function (data) {
+    res.status(200)
+      .json({
+        status: 'success',
+        data: data,
+        message: 'Retrieved ALL items'
+      })
+  })
+  .catch(function (err) {
+    return next(err)
+  })
 }
 
 module.exports = {
   createTable,
-  addItem,
   getAllItems
 }
 

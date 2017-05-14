@@ -8,5 +8,4 @@ module.exports = router
   res.send('sweet!')
 })
 .get('/createTable', db.createTable)
-.get('/addItem', db.addItem)
 .get('/getAllItems', db.getAllItems)
