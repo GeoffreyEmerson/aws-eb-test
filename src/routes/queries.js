@@ -6,12 +6,19 @@ var options = {
 }
 
 // Get database info from env
-const {RDS_HOSTNAME, RDS_PORT, RDS_USERNAME, RDS_PASSWORD} = process.env
+const {RDS_HOSTNAME, RDS_PORT, RDS_DB_NAME, RDS_USERNAME, RDS_PASSWORD} = process.env
+// Database connection parameters:
+var config = {
+  host: RDS_HOSTNAME,
+  port: RDS_PORT,
+  database: RDS_DB_NAME,
+  user: RDS_USERNAME,
+  password: RDS_PASSWORD
+}
 
 // start connection
 var pgp = require('pg-promise')(options)
-var connectionString = `postgres://${RDS_USERNAME}:${RDS_PASSWORD}@${RDS_HOSTNAME}:${RDS_PORT}/`
-var db = pgp(connectionString)
+var db = pgp(config)
 
 // add query functions
 
