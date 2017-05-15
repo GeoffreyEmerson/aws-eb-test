@@ -10,3 +10,5 @@ module.exports = router
 .get('/createTable', db.createTable)
 .get('/getAllItems', db.getAllItems)
 .get('/dbConfig', db.dbConfig)
+.get('/insertData', db.insertData)
+.get('/dropTable', db.dropTable)

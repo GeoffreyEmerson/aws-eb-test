@@ -28,20 +28,43 @@ function dbConfig (req, res, next) {
 }
 
 function createTable (req, res, next) {
-  db.tx(t => {
-    var queries = [
-      t.none('DROP TABLE items;'),
-      t.none('CREATE TABLE items (ID SERIAL PRIMARY KEY, name VARCHAR, media VARCHAR, release_date VARCHAR);'),
-      t.none('INSERT INTO items (name, media, release_date) VALUES($1, $1, $1)', 'Star Wars', 'LaserDisk', '1977')
-    ]
-    return t.batch(queries)
-  })
+  db.none('CREATE TABLE items (ID SERIAL PRIMARY KEY, name VARCHAR, media VARCHAR, release_date VARCHAR);')
   .then(function (data) {
     res.status(200)
     .json({
       status: 'success',
       data: data,
-      message: 'set up table'
+      message: 'created table items'
+    })
+  })
+  .catch(function (err) {
+    return next(err)
+  })
+}
+
+function insertData (req, res, next) {
+  db.none('INSERT INTO items (name, media, release_date) VALUES($1, $1, $1)', 'Star Wars', 'LaserDisk', '1977')
+  .then(function (data) {
+    res.status(200)
+    .json({
+      status: 'success',
+      data: data,
+      message: 'data added to table items'
+    })
+  })
+  .catch(function (err) {
+    return next(err)
+  })
+}
+
+function dropTable (req, res, next) {
+  db.none('DROP TABLE items;')
+  .then(function (data) {
+    res.status(200)
+    .json({
+      status: 'success',
+      data: data,
+      message: 'dropped table items'
     })
   })
   .catch(function (err) {
@@ -67,6 +90,8 @@ function getAllItems (req, res, next) {
 module.exports = {
   dbConfig,
   createTable,
+  dropTable,
+  insertData,
   getAllItems
 }
 
