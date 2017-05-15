@@ -27,17 +27,17 @@ function createTable (req, res, next) {
     var queries = [
       t.none('DROP TABLE items;'),
       t.none('CREATE TABLE items (ID SERIAL PRIMARY KEY, name VARCHAR, media VARCHAR, release_date VARCHAR);'),
-      t.none('INSERT INTO items (name, media, release_date) VALUES($1, $2, $3)', 'Star Wars', 'LaserDisk', '1977')
+      t.none('INSERT INTO items (name, media, release_date) VALUES($1, $1, $1)', 'Star Wars', 'LaserDisk', '1977')
     ]
     return t.batch(queries)
   })
   .then(function (data) {
     res.status(200)
-      .json({
-        status: 'success',
-        data: data,
-        message: 'set up table'
-      })
+    .json({
+      status: 'success',
+      data: data,
+      message: 'set up table'
+    })
   })
   .catch(function (err) {
     return next(err)
