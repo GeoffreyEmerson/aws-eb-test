@@ -1,14 +1,14 @@
 const express = require('express')
 const router = express.Router()
 
+const bodyparser = require('body-parser')
+const jsonParser = bodyparser.json()
+
 const db = require('./queries')
 
 module.exports = router
-.get('/', function (req, res) {
-  res.send('sweet!')
-})
-.get('/createTable', db.createTable)
-.get('/getAllItems', db.getAllItems)
-.get('/dbConfig', db.dbConfig)
-.get('/insertData', db.insertData)
-.get('/dropTable', db.dropTable)
+.get('/', db.getAllItems)
+.get('/:id', db.getSingleItem)
+.post('/', jsonParser, db.createItem)
+.put('/:id', jsonParser, db.updateItem)
+.delete('/:id', db.removeItem)
