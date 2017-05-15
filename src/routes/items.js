@@ -9,3 +9,4 @@ module.exports = router
 })
 .get('/createTable', db.createTable)
 .get('/getAllItems', db.getAllItems)
+.get('/dbConfig', db.dbConfig)

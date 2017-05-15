@@ -22,6 +22,11 @@ var db = pgp(config)
 
 // add query functions
 
+function dbConfig (req, res, next) {
+  res.status(200)
+    .json(config)
+}
+
 function createTable (req, res, next) {
   db.tx(t => {
     var queries = [
@@ -60,6 +65,7 @@ function getAllItems (req, res, next) {
 }
 
 module.exports = {
+  dbConfig,
   createTable,
   getAllItems
 }
